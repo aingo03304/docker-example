@@ -5,23 +5,24 @@ This is sample for Docker + nginx + uwsgi + flask.
 Dockerfile is the configuration for `docker build`.  
 Run `docker build -t "tag/name" .` to build this repo in a image.
 ```docker
-FROM ubuntu:latest # use ubuntu latest image
-COPY . /app # copy local to container
-WORKDIR /app # set the workdir to app
+FROM ubuntu:latest
+COPY . /app
+WORKDIR /app
 
-ENTRYPOINT ["/bin/sh", "-c" , "service nginx start && uwsgi --ini uwsgi.ini"] # this image will start nginx and uwsgi by default
+ENTRYPOINT ["/bin/sh", "-c" , "service nginx start && uwsgi --ini uwsgi.ini"]
 
 RUN apt-get clean \
     && apt-get -y update
 
 RUN apt-get -y install nginx \
-    && apt-get -y install python3-dev \
+    && apt-get -y install python3 \
+    && apt-get -y install python3-pip \
     && apt-get -y install build-essential \
     && apt-get -y install git
 
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
-COPY nginx.conf /etc/nginx # nginx configuration
+COPY nginx.conf /etc/nginx
 
 ENV WSGIPath application.py
 
